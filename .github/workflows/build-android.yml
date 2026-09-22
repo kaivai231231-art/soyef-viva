@@ -1,0 +1,57 @@
+name: Build Viva Study APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable pnpm
+        run: corepack enable && corepack prepare pnpm@10.4.1 --activate
+
+      - name: Install web dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build web app and refresh Android assets
+        run: |
+          pnpm --filter @workspace/viva-study build
+          bash android/update-web-assets.sh
+          APP_UPDATE_VERSION=1.1.0 bash scripts/generate-app-update.sh
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: "platform-tools"
+
+      - name: Install Android SDK packages
+        run: sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Build APK
+        working-directory: android
+        run: gradle assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: viva-study-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk

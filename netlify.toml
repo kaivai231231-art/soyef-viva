@@ -1,0 +1,28 @@
+[build]
+  base = "artifacts/viva-study"
+  command = "pnpm install && pnpm build && APP_UPDATE_VERSION=${APP_UPDATE_VERSION:-1.1.1} bash ../../scripts/generate-app-update.sh"
+  publish = "dist/public"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# index.html এবং app-update ফাইলগুলো যেন কখনো browser/CDN cache-এ আটকে না
+# থাকে — এগুলো ছোট আর প্রতি deploy-এ বদলায়, তাই সবসময় ফ্রেশ কপি আনা হবে।
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/app-update/*"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# JS/CSS asset ফাইলগুলোর নামে content hash থাকে (index-XXXX.js), তাই এগুলো
+# safely দীর্ঘদিন cache করা যায় — index.html বদলালে hash-ও বদলে যাবে।
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

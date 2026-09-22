@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.VivaStudy" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">#1F514C</item>
+        <item name="android:navigationBarColor">#F6F2E9</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+</resources>
