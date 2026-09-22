@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Viva Study"
+description = "A private, offline-friendly Bengali viva preparation workspace for building knowledge cards, practicing active recall, reviewing with spaced repetition, tracking progress, and managing optional AI providers locally."
+version = "1.0.0"
+id = "artifacts/viva-study"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22039
+
+[services.development]
+run = "pnpm --filter @workspace/viva-study run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/viva-study", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/viva-study/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22039"
+BASE_PATH = "/"

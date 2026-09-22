@@ -1,0 +1,18 @@
+{
+  "name": "Viva Study",
+  "short_name": "Viva Study",
+  "description": "নিজের ভাষায় বুঝে ভাইভা প্রস্তুতির স্থানীয় workspace।",
+  "lang": "bn",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f2e9",
+  "theme_color": "#1f514c",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "180x180",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
